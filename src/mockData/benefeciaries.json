@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Virat Kohli",
+    "bankName": "SBI",
+    "accountNumber": "75622010002960",
+    "accountType": "savings",
+    "id": 1
+  },
+  {
+    "name": "Rohit Sharma",
+    "bankName": "Union Bank of India",
+    "accountNumber": "75622010002961",
+    "accountType": "current",
+    "id": 2
+  },
+  {
+    "name": "Mahendra Singh Dhoni",
+    "bankName": "Standard Chartered Bank",
+    "accountNumber": "75622010002962",
+    "accountType": "rec-deposit",
+    "id": 3
+  },
+  {
+    "name": "Shubhman Gill",
+    "bankName": "HDFC Bank",
+    "accountNumber": "75622010002964",
+    "accountType": "fix-deposit",
+    "id": 4
+  }
+]
