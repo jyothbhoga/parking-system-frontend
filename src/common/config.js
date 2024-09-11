@@ -9,5 +9,6 @@ config.enumStaticUrls = {
   add: "add",
   vehicleList: "vehicles",
 };
+config.enumRowsPerPage = 5;
 
 export default config;
