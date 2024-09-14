@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   TextField,
@@ -9,21 +9,62 @@ import {
   FormControl,
   Select,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import config from "../../../common/config";
+import { useAtomValue } from "jotai";
+import { useAddEditVehicles } from "../../../customHooks/useAddEditVehicles";
+import { vehicleDataAtom } from "../../../jotai/vehiclesAtom";
 
-function AddVehicleForm() {
+const AddVehicleForm = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isEdit = location.pathname.includes(config.enumStaticUrls.edit);
+  const vehicleId = isEdit && location.pathname.split("/")[2];
+  const vehicleData = useAtomValue(vehicleDataAtom);
+  const { fetchVehicleById, createVehicle, updateVehicle } =
+    useAddEditVehicles();
   const [formData, setFormData] = useState({
-    vehicleName: "",
+    name: "",
     ownerName: "",
-    vehicleImage: null,
-    vehicleType: "",
+    stickerImgURL: null,
+    type: "",
     roomNo: "",
-    buildingName: "",
+    bldgName: "",
     regNo: "",
   });
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (isEdit) {
+      if (vehicleData?.data?.length) {
+        let vehicle;
+        vehicle = vehicleData?.data.find((veh) => veh._id === vehicleId);
+        setFormData({
+          name: vehicle.name,
+          ownerName: vehicle.ownerName,
+          stickerImgURL: vehicle.stickerImgURL,
+          type: vehicle.type,
+          roomNo: vehicle.roomNo,
+          bldgName: vehicle.bldgName,
+          regNo: vehicle.regNo,
+        });
+      } else {
+        getvehicleData();
+      }
+    }
+  }, []);
+
+  const getvehicleData = async () => {
+    const vehicle = await fetchVehicleById(vehicleId);
+    setFormData({
+      name: vehicle.name,
+      ownerName: vehicle.ownerName,
+      stickerImgURL: vehicle.stickerImgURL,
+      type: vehicle.type,
+      roomNo: vehicle.roomNo,
+      bldgName: vehicle.bldgName,
+      regNo: vehicle.regNo,
+    });
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,14 +77,23 @@ function AddVehicleForm() {
   const handleFileChange = (e) => {
     setFormData((prevData) => ({
       ...prevData,
-      vehicleImage: e.target.files[0],
+      stickerImgURL: e.target.files[0],
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Navigate to the display page and pass formData using the `state` prop
-    navigate(`/${config.enumStaticUrls.view}/1`, { state: { formData } });
+  const handleSubmit = () => {
+    const data = new FormData();
+    const { stickerImgURL, name, ownerName, type, regNo, bldgName, roomNo } =
+      formData;
+    data.append("stickerImgURL", stickerImgURL); // Append image file
+    data.append("name", name); // Append text data
+    data.append("ownerName", ownerName);
+    data.append("type", type);
+    data.append("regNo", regNo);
+    data.append("bldgName", bldgName);
+    data.append("roomNo", roomNo);
+    const res = isEdit ? updateVehicle(vehicleId, data) : createVehicle(data);
+    res && navigate(`/${config.enumStaticUrls.vehicleList}}`);
   };
 
   return (
@@ -61,19 +111,18 @@ function AddVehicleForm() {
         borderRadius: 2,
         boxShadow: 2,
       }}
-      onSubmit={handleSubmit}
     >
       <Typography variant="h5" component="h2" gutterBottom>
-        Add Vehicle
+        {isEdit ? "Update" : "Add"} Vehicle
       </Typography>
 
       {/* Vehicle Name */}
       <TextField
         label="Vehicle Name"
-        name="vehicleName"
+        name="name"
         variant="outlined"
         fullWidth
-        value={formData.vehicleName}
+        value={formData.name}
         onChange={handleChange}
         required
       />
@@ -101,8 +150,15 @@ function AddVehicleForm() {
       />
 
       {/* Vehicle Image */}
+      {isEdit ? (
+        <img
+          width={"100%"}
+          src={formData.stickerImgURL}
+          alt={formData.ownerName}
+        />
+      ) : null}
       <Button variant="contained" component="label" fullWidth>
-        Upload Vehicle Image
+        {isEdit ? "Update" : "Upload"} Vehicle Image
         <input type="file" hidden onChange={handleFileChange} required />
       </Button>
 
@@ -110,13 +166,13 @@ function AddVehicleForm() {
       <FormControl fullWidth required>
         <InputLabel>Vehicle Type</InputLabel>
         <Select
-          name="vehicleType"
-          value={formData.vehicleType}
+          name="type"
+          value={formData.type}
           onChange={handleChange}
           label="Vehicle Type"
         >
-          <MenuItem value="2-wheeler">2 Wheeler</MenuItem>
-          <MenuItem value="4-wheeler">4 Wheeler</MenuItem>
+          <MenuItem value="2 wheeler">2 Wheeler</MenuItem>
+          <MenuItem value="4 wheeler">4 Wheeler</MenuItem>
         </Select>
       </FormControl>
 
@@ -135,23 +191,23 @@ function AddVehicleForm() {
       <FormControl fullWidth required>
         <InputLabel>Building Name</InputLabel>
         <Select
-          name="buildingName"
-          value={formData.buildingName}
+          name="bldgName"
+          value={formData.bldgName}
           onChange={handleChange}
           label="Building Name"
         >
-          <MenuItem value="A-wing">A Wing</MenuItem>
-          <MenuItem value="B-wing">B Wing</MenuItem>
-          <MenuItem value="C-wing">C Wing</MenuItem>
+          <MenuItem value="Satyam">Satyam</MenuItem>
+          <MenuItem value="Shivam">Shivam</MenuItem>
+          <MenuItem value="Sundaram">Sundaram</MenuItem>
         </Select>
       </FormControl>
 
       {/* Add Vehicle Button */}
-      <Button type="submit" variant="contained" color="primary">
-        Add Vehicle
+      <Button onClick={handleSubmit} variant="contained" color="primary">
+        {isEdit ? "Update" : "Add"} Vehicle
       </Button>
     </Box>
   );
-}
+};
 
 export default AddVehicleForm;

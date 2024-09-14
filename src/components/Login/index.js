@@ -9,13 +9,25 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import config from "../../common/config";
+import { makeAPICall } from "../../common/axios/apiCalls";
+import { setCookie } from "../../common/helper";
 
 const LoginModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => navigate(`/${config.enumStaticUrls.vehicleList}`);
+  const handleLogin = async () => {
+    const url = `${config.API_BASE_DOMAIN}${config.API_BASE_URL}${config.API_ADMIN_URL}/login`;
+    const data = await makeAPICall(
+      url,
+      "POST",
+      { email: email, password: password },
+      false
+    );
+    setCookie("token", `Bearer ${data.token}`);
+    navigate(`/${config.enumStaticUrls.vehicleList}`);
+  };
 
   return (
     <div>

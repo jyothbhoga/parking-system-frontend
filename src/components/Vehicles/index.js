@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   List,
@@ -8,6 +8,8 @@ import {
   Pagination,
   Box,
   Button,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 import config from "../../common/config";
 import ViewIcon from "../../assets/images/view";
@@ -16,92 +18,29 @@ import DeleteIcon from "../../assets/images/delete";
 import FileDownloadIcon from "../../assets/images/download";
 import { useNavigate } from "react-router-dom";
 import DeleteConfirmationModal from "../../common/Popup/Delete";
+import { useAtomValue } from "jotai";
+import { loadingAtom, vehicleDataAtom } from "../../jotai/vehiclesAtom";
+import { useAddEditVehicles } from "../../customHooks/useAddEditVehicles";
 // Sample data (replace with your actual data fetching logic)
-const sampleData = [
-  {
-    srNo: 1,
-    ownerName: "Category 1",
-    regNo: "John Doe",
-    type: "john.doe@example.com",
-  },
-  {
-    srNo: 2,
-    ownerName: "Category 1",
-    regNo: "Jane Smith",
-    type: "jane.smith@example.com",
-  },
-  {
-    srNo: 3,
-    ownerName: "Category 2",
-    regNo: "Alice Johnson",
-    type: "alice.johnson@example.com",
-  },
-  {
-    srNo: 4,
-    ownerName: "Category 2",
-    regNo: "Bob Brown",
-    type: "bob.brown@example.com",
-  },
-  {
-    srNo: 5,
-    ownerName: "Category 3",
-    regNo: "Carol White",
-    type: "carol.white@example.com",
-  },
-  {
-    srNo: 6,
-    ownerName: "Category 3",
-    regNo: "David Green",
-    type: "david.green@example.com",
-  },
-  {
-    srNo: 7,
-    ownerName: "Category 1",
-    regNo: "Emma Blue",
-    type: "emma.blue@example.com",
-  },
-  {
-    srNo: 8,
-    ownerName: "Category 2",
-    regNo: "Frank Black",
-    type: "frank.black@example.com",
-  },
-  {
-    srNo: 9,
-    ownerName: "Category 3",
-    regNo: "Grace Red",
-    type: "grace.red@example.com",
-  },
-  {
-    srNo: 10,
-    ownerName: "Category 1",
-    regNo: "Henry Grey",
-    type: "henry.grey@example.com",
-  },
-  {
-    srNo: 11,
-    ownerName: "Category 2",
-    regNo: "Ivy Yellow",
-    type: "ivy.yellow@example.com",
-  },
-  {
-    srNo: 12,
-    ownerName: "Category 3",
-    regNo: "Jack Orange",
-    type: "jack.orange@example.com",
-  },
-];
 
 const PaginatedTable = () => {
   const [page, setPage] = useState(1);
-  const rowsPerPage = config.enumRowsPerPage;
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const vehiclesAtom = useAtomValue(vehicleDataAtom);
+  const vehiclesLoadingAtom = useAtomValue(loadingAtom);
+
+  const { fetchVehicles } = useAddEditVehicles();
+
+  useEffect(() => {
+    fetchVehicles(page, config.pageLimit);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
   const handleOpen = () => {
-    console.log("hey ther");
     setOpen(true);
   };
+
   const handleClose = () => setOpen(false);
   const handleConfirm = () => {
     // Handle the deletion logic here
@@ -114,10 +53,11 @@ const PaginatedTable = () => {
   };
 
   // Get the subset of data for the current page
-  const startIndex = (page - 1) * rowsPerPage;
-  const paginatedData = sampleData.slice(startIndex, startIndex + rowsPerPage);
-
-  return (
+  return vehiclesLoadingAtom ? (
+    <Backdrop open={open} onClick={handleClose}>
+      <CircularProgress color="inherit" />
+    </Backdrop>
+  ) : (
     <Container>
       <Box
         display={"flex"}
@@ -153,11 +93,9 @@ const PaginatedTable = () => {
           </ListItem>
 
           {/* Data Rows */}
-          {paginatedData.map((record) => (
-            <ListItem key={record.srNo}>
-              <Box sx={{ width: "20%", textAlign: "center" }}>
-                {record.srNo}
-              </Box>
+          {vehiclesAtom?.data?.map((record, ind) => (
+            <ListItem key={record._id}>
+              <Box sx={{ width: "20%", textAlign: "center" }}>{ind + 1}</Box>
               <Box sx={{ width: "20%", textAlign: "center" }}>
                 {record.ownerName}
               </Box>
@@ -168,8 +106,18 @@ const PaginatedTable = () => {
                 {record.type}
               </Box>
               <Box sx={{ width: "20%", textAlign: "center" }}>
-                <ViewIcon style={{ cursor: "pointer" }} />
-                <EditIcon style={{ cursor: "pointer" }} />
+                <ViewIcon
+                  style={{ cursor: "pointer" }}
+                  onClick={() =>
+                    navigate(`/${config.enumStaticUrls.view}/${record._id}`)
+                  }
+                />
+                <EditIcon
+                  style={{ cursor: "pointer" }}
+                  onClick={() =>
+                    navigate(`/${config.enumStaticUrls.edit}/${record._id}`)
+                  }
+                />
                 <DeleteIcon
                   onClick={handleOpen}
                   style={{ cursor: "pointer" }}
@@ -182,7 +130,7 @@ const PaginatedTable = () => {
       </Box>
       <Paper sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
         <Pagination
-          count={Math.ceil(sampleData.length / rowsPerPage)}
+          count={vehiclesAtom.totalPages}
           page={page}
           onChange={handleChangePage}
           color="primary"
