@@ -7,7 +7,6 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import config from "../../common/config";
 import { makeAPICall } from "../../common/axios/apiCalls";
 import { setCookie } from "../../common/helper";
@@ -15,7 +14,6 @@ import { setCookie } from "../../common/helper";
 const LoginModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
 
   const handleLogin = async () => {
     const url = `${config.API_BASE_DOMAIN}${config.API_BASE_URL}${config.API_ADMIN_URL}/login`;
@@ -26,7 +24,7 @@ const LoginModal = () => {
       false
     );
     setCookie("token", `Bearer ${data.token}`);
-    navigate(`/${config.enumStaticUrls.vehicleList}`);
+    window.location.reload();
   };
 
   return (

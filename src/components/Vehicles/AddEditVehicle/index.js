@@ -14,12 +14,13 @@ import config from "../../../common/config";
 import { useAtomValue } from "jotai";
 import { useAddEditVehicles } from "../../../customHooks/useAddEditVehicles";
 import { vehicleDataAtom } from "../../../jotai/vehiclesAtom";
+import GenerateSticker from "./GenerateSticker";
 
 const AddVehicleForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isEdit = location.pathname.includes(config.enumStaticUrls.edit);
-  const vehicleId = isEdit && location.pathname.split("/")[2];
+  const vehicleId = isEdit && location.pathname.split("/")[3];
   const vehicleData = useAtomValue(vehicleDataAtom);
   const { fetchVehicleById, createVehicle, updateVehicle } =
     useAddEditVehicles();
@@ -74,14 +75,7 @@ const AddVehicleForm = () => {
     }));
   };
 
-  const handleFileChange = (e) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      stickerImgURL: e.target.files[0],
-    }));
-  };
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const data = new FormData();
     const { stickerImgURL, name, ownerName, type, regNo, bldgName, roomNo } =
       formData;
@@ -92,7 +86,9 @@ const AddVehicleForm = () => {
     data.append("regNo", regNo);
     data.append("bldgName", bldgName);
     data.append("roomNo", roomNo);
-    const res = isEdit ? updateVehicle(vehicleId, data) : createVehicle(data);
+    const res = isEdit
+      ? await updateVehicle(vehicleId, data)
+      : await createVehicle(data);
     res && navigate(`/${config.enumStaticUrls.vehicleList}}`);
   };
 
@@ -157,10 +153,6 @@ const AddVehicleForm = () => {
           alt={formData.ownerName}
         />
       ) : null}
-      <Button variant="contained" component="label" fullWidth>
-        {isEdit ? "Update" : "Upload"} Vehicle Image
-        <input type="file" hidden onChange={handleFileChange} required />
-      </Button>
 
       {/* Vehicle Type Dropdown */}
       <FormControl fullWidth required>
@@ -201,9 +193,15 @@ const AddVehicleForm = () => {
           <MenuItem value="Sundaram">Sundaram</MenuItem>
         </Select>
       </FormControl>
+      <GenerateSticker vehicleData={formData} setFormData={setFormData} />
 
       {/* Add Vehicle Button */}
-      <Button onClick={handleSubmit} variant="contained" color="primary">
+      <Button
+        onClick={handleSubmit}
+        variant="contained"
+        color="primary"
+        sx={{ color: "#fff" }}
+      >
         {isEdit ? "Update" : "Add"} Vehicle
       </Button>
     </Box>

@@ -17,11 +17,11 @@ const RoutesComponent = memo(() => {
           {loggedInToken ? (
             <>
               <Route
-                path={`/${config.enumStaticUrls.edit}/:id/`}
+                path={`/${config.enumStaticUrls.vehicleList}/${config.enumStaticUrls.edit}/:id/`}
                 element={<AddEditVehicle />}
               />
-               <Route
-                path={`/${config.enumStaticUrls.add}`}
+              <Route
+                path={`/${config.enumStaticUrls.vehicleList}/${config.enumStaticUrls.add}`}
                 element={<AddEditVehicle />}
               />
               <Route
@@ -29,7 +29,7 @@ const RoutesComponent = memo(() => {
                 element={<VehiclesList />}
               />
               <Route
-                path={`/${config.enumStaticUrls.view}/:id/`}
+                path={`/${config.enumStaticUrls.vehicleList}/${config.enumStaticUrls.view}/:id/`}
                 element={<ViewVehicle />}
               />
               {/* Default to vehicle list if route doesn't match */}

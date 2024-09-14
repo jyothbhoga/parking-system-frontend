@@ -21,6 +21,7 @@ import DeleteConfirmationModal from "../../common/Popup/Delete";
 import { useAtomValue } from "jotai";
 import { loadingAtom, vehicleDataAtom } from "../../jotai/vehiclesAtom";
 import { useAddEditVehicles } from "../../customHooks/useAddEditVehicles";
+import { deleteCookie, downloadBlob } from "../../common/helper";
 // Sample data (replace with your actual data fetching logic)
 
 const PaginatedTable = () => {
@@ -52,13 +53,21 @@ const PaginatedTable = () => {
     setPage(newPage);
   };
 
+  const onLogout = () => {
+    deleteCookie("token");
+  };
+
+  const handleDownload = (fileUrl, filename) => {
+    downloadBlob(fileUrl, filename);
+  };
+
   // Get the subset of data for the current page
   return vehiclesLoadingAtom ? (
     <Backdrop open={open} onClick={handleClose}>
       <CircularProgress color="inherit" />
     </Backdrop>
   ) : (
-    <Container>
+    <Container style={{ position: "relative" }}>
       <Box
         display={"flex"}
         justifyContent={"space-between"}
@@ -68,11 +77,24 @@ const PaginatedTable = () => {
           Vehicles List
         </Typography>
         <Button
-          onClick={() => navigate(`/${config.enumStaticUrls.add}`)}
+          onClick={() =>
+            navigate(
+              `/${config.enumStaticUrls.vehicleList}/${config.enumStaticUrls.add}`
+            )
+          }
           variant="contained"
           color="primary"
+          sx={{ color: "#fff" }}
         >
           Add vehicle
+        </Button>
+        <Button
+          onClick={onLogout}
+          variant="contained"
+          color="primary"
+          sx={{ color: "#fff" }}
+        >
+          Logout
         </Button>
       </Box>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -80,7 +102,7 @@ const PaginatedTable = () => {
           sx={{ border: "1px solid #ccc", borderRadius: 1, overflowX: "auto" }}
         >
           {/* Header Row */}
-          <ListItem sx={{ backgroundColor: "#f5f5f5", fontWeight: "bold" }}>
+          <ListItem sx={{ backgroundColor: "#90caf9", fontWeight: "bold" }}>
             <Box sx={{ width: "20%", textAlign: "center" }}>Sr No.</Box>
             <Box sx={{ width: "20%", textAlign: "center" }}>
               Name of the Owner
@@ -107,35 +129,53 @@ const PaginatedTable = () => {
               </Box>
               <Box sx={{ width: "20%", textAlign: "center" }}>
                 <ViewIcon
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: "pointer", fill: "#fff" }}
                   onClick={() =>
-                    navigate(`/${config.enumStaticUrls.view}/${record._id}`)
+                    navigate(
+                      `/${config.enumStaticUrls.vehicleList}/${config.enumStaticUrls.view}/${record._id}`
+                    )
                   }
                 />
                 <EditIcon
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: "pointer", fill: "#fff" }}
                   onClick={() =>
-                    navigate(`/${config.enumStaticUrls.edit}/${record._id}`)
+                    navigate(
+                      `/${config.enumStaticUrls.vehicleList}/${config.enumStaticUrls.edit}/${record._id}`
+                    )
                   }
                 />
                 <DeleteIcon
                   onClick={handleOpen}
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: "pointer", fill: "#fff" }}
                 />
-                <FileDownloadIcon style={{ cursor: "pointer" }} />
+                <FileDownloadIcon
+                  style={{ cursor: "pointer", fill: "#fff" }}
+                  onClick={() =>
+                    handleDownload(record.stickerImgURL, `${record.regNo}.png`)
+                  }
+                />
               </Box>
             </ListItem>
           ))}
         </List>
+        <Paper
+          sx={{
+            display: "flex",
+            justifyContent: "end",
+            alignItems: "center",
+            height: "50px",
+            paddingRight: "20px",
+          }}
+        >
+          <Pagination
+            count={vehiclesAtom.totalPages}
+            page={page}
+            onChange={handleChangePage}
+            color="primary"
+          />
+        </Paper>
       </Box>
-      <Paper sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
-        <Pagination
-          count={vehiclesAtom.totalPages}
-          page={page}
-          onChange={handleChangePage}
-          color="primary"
-        />
-      </Paper>
+
       <DeleteConfirmationModal
         open={open}
         onClose={handleClose}

@@ -10,7 +10,7 @@ import { useAddEditVehicles } from "../../../customHooks/useAddEditVehicles";
 
 const ViewVehicle = () => {
   const location = useLocation();
-  const vehicleId = location.pathname.split("/")[2];
+  const vehicleId = location.pathname.split("/")[3];
   const vehicleData = useAtomValue(vehicleDataAtom);
   const { fetchVehicleById } = useAddEditVehicles();
   const [currVehicle, setCurrentVehicle] = useAtom(currVehicleDataAtom);
@@ -58,7 +58,11 @@ const ViewVehicle = () => {
                 primary="Vehicle Image"
                 secondary={currVehicle.name}
               />
-              <img src={currVehicle.stickerImgURL} alt={currVehicle.name} />
+              <img
+                src={currVehicle.stickerImgURL}
+                alt={currVehicle.name}
+                width={"100%"}
+              />
             </ListItem>
           )}
         </List>

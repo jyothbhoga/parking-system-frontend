@@ -66,11 +66,12 @@ export const useAddEditVehicles = () => {
   const updateVehicle = async (id, updatedVehicleData) => {
     setLoading(true);
     try {
-      await makeAPICall(
+      const data = await makeAPICall(
         `${config.API_BASE_DOMAIN}${config.API_BASE_URL}${config.API_VEHICLE_URL}/update/${id}`,
         "POST",
         updatedVehicleData
       );
+      return data;
     } catch (error) {
       setError(error.message);
     } finally {
