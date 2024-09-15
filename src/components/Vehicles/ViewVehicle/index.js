@@ -59,7 +59,7 @@ const ViewVehicle = () => {
                 secondary={currVehicle.name}
               />
               <img
-                src={currVehicle.stickerImgURL}
+                src={`${currVehicle.stickerImgURL}?v=${Date.now()}`}
                 alt={currVehicle.name}
                 width={"100%"}
               />

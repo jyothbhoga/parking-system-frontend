@@ -68,12 +68,21 @@ export const useAddEditVehicles = () => {
   const createVehicle = async (newVehicleData) => {
     setLoading(true);
     try {
-      const data = await makeAPICall(
+      const response = await makeAPICall(
         `${config.API_BASE_DOMAIN}${config.API_BASE_URL}${config.API_VEHICLE_URL}/create`,
         "POST",
         newVehicleData
       );
-      return data;
+      if (response.status === 201) {
+        return response;
+      } else {
+        setToast({
+          key: "createVehicleAPIError",
+          show: true,
+          message: response.response.data.error,
+        });
+        return response;
+      }
     } catch (error) {
       setError(error.message);
     } finally {

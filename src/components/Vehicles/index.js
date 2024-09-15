@@ -151,7 +151,13 @@ const PaginatedTable = () => {
                 <FileDownloadIcon
                   style={{ cursor: "pointer", fill: "#fff" }}
                   onClick={() =>
-                    handleDownload(record.stickerImgURL, `${record.regNo}.png`)
+                    handleDownload(
+                      `${record.stickerImgURL}?v=${Date.now()}`,
+                      `${record.regNo
+                        .toString()
+                        .toLowerCase()
+                        .replace(/\s+/g, "_")}.png`
+                    )
                   }
                 />
               </Box>

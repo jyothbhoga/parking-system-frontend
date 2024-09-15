@@ -15,6 +15,7 @@ import { useAtomValue } from "jotai";
 import { useAddEditVehicles } from "../../../customHooks/useAddEditVehicles";
 import { vehicleDataAtom } from "../../../jotai/vehiclesAtom";
 import GenerateSticker from "./GenerateSticker";
+import { isEqualObjects } from "../../../common/helper";
 
 const AddVehicleForm = () => {
   const location = useLocation();
@@ -22,6 +23,17 @@ const AddVehicleForm = () => {
   const isEdit = location.pathname.includes(config.enumStaticUrls.edit);
   const vehicleId = isEdit && location.pathname.split("/")[3];
   const vehicleData = useAtomValue(vehicleDataAtom);
+  const [isValidated, setValidation] = useState(false);
+  const [isStickerDataValid, setStickerDataValid] = useState(false);
+  const [stickerDataGen, setStickerDataGen] = useState({
+    name: "",
+    ownerName: "",
+    stickerImgURL: null,
+    type: "",
+    roomNo: "",
+    bldgName: "",
+    regNo: "",
+  });
   const { fetchVehicleById, createVehicle, updateVehicle } =
     useAddEditVehicles();
   const [formData, setFormData] = useState({
@@ -35,36 +47,45 @@ const AddVehicleForm = () => {
   });
 
   useEffect(() => {
-    if (isEdit) {
-      if (vehicleData?.data?.length) {
-        let vehicle;
-        vehicle = vehicleData?.data.find((veh) => veh._id === vehicleId);
-        setFormData({
-          name: vehicle.name,
-          ownerName: vehicle.ownerName,
-          stickerImgURL: vehicle.stickerImgURL,
-          type: vehicle.type,
-          roomNo: vehicle.roomNo,
-          bldgName: vehicle.bldgName,
-          regNo: vehicle.regNo,
-        });
-      } else {
-        getvehicleData();
-      }
+    if (isEdit && vehicleData?.data?.length) {
+      const vehicle = vehicleData.data.find((veh) => veh._id === vehicleId);
+      setFormData({ ...vehicle });
+      setStickerDataGen({ ...vehicle });
+    } else if (isEdit) {
+      getvehicleData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const { name, ownerName, stickerImgURL, type, roomNo, bldgName, regNo } =
+      formData;
+    const commonValidation =
+      name.length > 3 &&
+      ownerName.length > 3 &&
+      ["2 Wheeler", "4 Wheeler"].includes(type) &&
+      roomNo.length > 2 &&
+      regNo.length > 3 &&
+      bldgName.length > 3;
+
+    const stickerValidation =
+      commonValidation &&
+      (stickerDataGen ? !isEqualObjects(stickerDataGen, formData) : true);
+    setStickerDataValid(stickerValidation);
+    setValidation(
+      commonValidation &&
+        (stickerDataGen
+          ? typeof stickerImgURL === "string"
+            ? false
+            : isEqualObjects(stickerDataGen, formData)
+          : stickerImgURL)
+    );
+  }, [formData, stickerDataGen]);
 
   const getvehicleData = async () => {
     const vehicle = await fetchVehicleById(vehicleId);
-    setFormData({
-      name: vehicle.name,
-      ownerName: vehicle.ownerName,
-      stickerImgURL: vehicle.stickerImgURL,
-      type: vehicle.type,
-      roomNo: vehicle.roomNo,
-      bldgName: vehicle.bldgName,
-      regNo: vehicle.regNo,
-    });
+    setFormData({ ...vehicle });
+    setStickerDataGen({ ...vehicle });
   };
 
   const handleChange = (e) => {
@@ -86,10 +107,12 @@ const AddVehicleForm = () => {
     data.append("regNo", regNo);
     data.append("bldgName", bldgName);
     data.append("roomNo", roomNo);
-    const res = isEdit
+    const response = isEdit
       ? await updateVehicle(vehicleId, data)
       : await createVehicle(data);
-    res && navigate(`/${config.enumStaticUrls.vehicleList}}`);
+    if (response.status === (isEdit ? 200 : 201)) {
+      navigate(`/${config.enumStaticUrls.vehicleList}}`);
+    }
   };
 
   return (
@@ -121,6 +144,7 @@ const AddVehicleForm = () => {
         value={formData.name}
         onChange={handleChange}
         required
+        disabled={isEdit}
       />
 
       {/* Owner Name */}
@@ -143,6 +167,7 @@ const AddVehicleForm = () => {
         value={formData.regNo}
         onChange={handleChange}
         required
+        disabled={isEdit}
       />
 
       {/* Vehicle Type Dropdown */}
@@ -153,9 +178,10 @@ const AddVehicleForm = () => {
           value={formData.type}
           onChange={handleChange}
           label="Vehicle Type"
+          disabled={isEdit}
         >
-          <MenuItem value="2 wheeler">2 Wheeler</MenuItem>
-          <MenuItem value="4 wheeler">4 Wheeler</MenuItem>
+          <MenuItem value="2 Wheeler">2 Wheeler</MenuItem>
+          <MenuItem value="4 Wheeler">4 Wheeler</MenuItem>
         </Select>
       </FormControl>
 
@@ -184,7 +210,12 @@ const AddVehicleForm = () => {
           <MenuItem value="Sundaram">Sundaram</MenuItem>
         </Select>
       </FormControl>
-      <GenerateSticker vehicleData={formData} setFormData={setFormData} />
+      <GenerateSticker
+        vehicleData={formData}
+        setFormData={setFormData}
+        isStickerDataValid={isStickerDataValid}
+        setStickerDataGen={setStickerDataGen}
+      />
 
       {/* Add Vehicle Button */}
       <Button
@@ -192,6 +223,7 @@ const AddVehicleForm = () => {
         variant="contained"
         color="primary"
         sx={{ color: "#fff" }}
+        disabled={!isValidated}
       >
         {isEdit ? "Update" : "Add"} Vehicle
       </Button>
