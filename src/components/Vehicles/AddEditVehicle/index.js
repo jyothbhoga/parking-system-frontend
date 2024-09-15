@@ -11,11 +11,12 @@ import {
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import config from "../../../common/config";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useAddEditVehicles } from "../../../customHooks/useAddEditVehicles";
 import { vehicleDataAtom } from "../../../jotai/vehiclesAtom";
 import GenerateSticker from "./GenerateSticker";
 import { isEqualObjects } from "../../../common/helper";
+import { toastStateAtom } from "../../../jotai/commonAtom";
 
 const AddVehicleForm = () => {
   const location = useLocation();
@@ -25,6 +26,8 @@ const AddVehicleForm = () => {
   const vehicleData = useAtomValue(vehicleDataAtom);
   const [isValidated, setValidation] = useState(false);
   const [isStickerDataValid, setStickerDataValid] = useState(false);
+  const setToast = useSetAtom(toastStateAtom);
+
   const [stickerDataGen, setStickerDataGen] = useState({
     name: "",
     ownerName: "",
@@ -111,6 +114,11 @@ const AddVehicleForm = () => {
       ? await updateVehicle(vehicleId, data)
       : await createVehicle(data);
     if (response.status === (isEdit ? 200 : 201)) {
+      setToast({
+        key: isEdit ? "updateVehicleSuccess" : "createVehicleSuccess",
+        show: true,
+        message: response.data.message,
+      });
       navigate(`/${config.enumStaticUrls.vehicleList}}`);
     }
   };
@@ -180,8 +188,11 @@ const AddVehicleForm = () => {
           label="Vehicle Type"
           disabled={isEdit}
         >
-          <MenuItem value="2 Wheeler">2 Wheeler</MenuItem>
-          <MenuItem value="4 Wheeler">4 Wheeler</MenuItem>
+          {config.enumVehicleType.map((type) => (
+            <MenuItem value={type.name} key={type.id}>
+              {type.name}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
 
@@ -205,9 +216,11 @@ const AddVehicleForm = () => {
           onChange={handleChange}
           label="Building Name"
         >
-          <MenuItem value="Satyam">Satyam</MenuItem>
-          <MenuItem value="Shivam">Shivam</MenuItem>
-          <MenuItem value="Sundaram">Sundaram</MenuItem>
+          {config.enumBldgNames.map((bldg) => (
+            <MenuItem value={bldg.name} key={bldg.id}>
+              {bldg.name}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
       <GenerateSticker

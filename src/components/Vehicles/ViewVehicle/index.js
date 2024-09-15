@@ -22,6 +22,7 @@ const ViewVehicle = () => {
     } else {
       fetchVehicleById(vehicleId);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -38,6 +39,12 @@ const ViewVehicle = () => {
             <ListItemText
               primary="Owner Name"
               secondary={currVehicle.ownerName}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary="Registration Nuumber"
+              secondary={currVehicle.regNo}
             />
           </ListItem>
           <ListItem>

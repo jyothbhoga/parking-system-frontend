@@ -18,10 +18,11 @@ import DeleteIcon from "../../assets/images/delete";
 import FileDownloadIcon from "../../assets/images/download";
 import { useNavigate } from "react-router-dom";
 import DeleteConfirmationModal from "../../common/Popup/Delete";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { loadingAtom, vehicleDataAtom } from "../../jotai/vehiclesAtom";
 import { useAddEditVehicles } from "../../customHooks/useAddEditVehicles";
 import { deleteCookie, downloadBlob } from "../../common/helper";
+import { toastStateAtom } from "../../jotai/commonAtom";
 // Sample data (replace with your actual data fetching logic)
 
 const PaginatedTable = () => {
@@ -30,22 +31,32 @@ const PaginatedTable = () => {
   const [open, setOpen] = useState(false);
   const vehiclesAtom = useAtomValue(vehicleDataAtom);
   const vehiclesLoadingAtom = useAtomValue(loadingAtom);
+  const setToast = useSetAtom(toastStateAtom);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
 
-  const { fetchVehicles } = useAddEditVehicles();
+  const { fetchVehicles, deleteVehicle } = useAddEditVehicles();
 
   useEffect(() => {
     fetchVehicles(page, config.pageLimit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
-  const handleOpen = () => {
+  const handleOpen = (id) => {
     setOpen(true);
+    setSelectedVehicle(id);
   };
 
   const handleClose = () => setOpen(false);
-  const handleConfirm = () => {
-    // Handle the deletion logic here
-    console.log("Item deleted");
+  const handleConfirm = async () => {
+    const response = await deleteVehicle(selectedVehicle);
+    if (response.status === 200) {
+      setToast({
+        key: "deleteVehicleSuccess",
+        show: true,
+        message: response.data.message,
+      });
+      fetchVehicles(page, config.pageLimit);
+    }
     setOpen(false);
   };
 
@@ -76,26 +87,28 @@ const PaginatedTable = () => {
         <Typography variant="h6" component="div" sx={{ margin: 2 }}>
           Vehicles List
         </Typography>
-        <Button
-          onClick={() =>
-            navigate(
-              `/${config.enumStaticUrls.vehicleList}/${config.enumStaticUrls.add}`
-            )
-          }
-          variant="contained"
-          color="primary"
-          sx={{ color: "#fff" }}
-        >
-          Add vehicle
-        </Button>
-        <Button
-          onClick={onLogout}
-          variant="contained"
-          color="primary"
-          sx={{ color: "#fff" }}
-        >
-          Logout
-        </Button>
+        <Box>
+          <Button
+            onClick={() =>
+              navigate(
+                `/${config.enumStaticUrls.vehicleList}/${config.enumStaticUrls.add}`
+              )
+            }
+            variant="contained"
+            color="primary"
+            sx={{ color: "#fff", marginRight: "20px" }}
+          >
+            Add vehicle
+          </Button>
+          <Button
+            onClick={onLogout}
+            variant="contained"
+            color="primary"
+            sx={{ color: "#fff" }}
+          >
+            Logout
+          </Button>
+        </Box>
       </Box>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <List
@@ -145,7 +158,7 @@ const PaginatedTable = () => {
                   }
                 />
                 <DeleteIcon
-                  onClick={handleOpen}
+                  onClick={() => handleOpen(record._id)}
                   style={{ cursor: "pointer", fill: "#fff" }}
                 />
                 <FileDownloadIcon

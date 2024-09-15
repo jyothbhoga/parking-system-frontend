@@ -79,7 +79,7 @@ export const useAddEditVehicles = () => {
         setToast({
           key: "createVehicleAPIError",
           show: true,
-          message: response.response.data.error,
+          message: response.response.data.message,
         });
         return response;
       }
@@ -93,12 +93,21 @@ export const useAddEditVehicles = () => {
   const updateVehicle = async (id, updatedVehicleData) => {
     setLoading(true);
     try {
-      const data = await makeAPICall(
+      const response = await makeAPICall(
         `${config.API_BASE_DOMAIN}${config.API_BASE_URL}${config.API_VEHICLE_URL}/update/${id}`,
         "POST",
         updatedVehicleData
       );
-      return data;
+      if (response.status === 200) {
+        return response;
+      } else {
+        setToast({
+          key: "updateVehicleAPIError",
+          show: true,
+          message: response.response.data.message,
+        });
+        return response;
+      }
     } catch (error) {
       setError(error.message);
     } finally {
@@ -106,5 +115,35 @@ export const useAddEditVehicles = () => {
     }
   };
 
-  return { fetchVehicles, createVehicle, updateVehicle, fetchVehicleById };
+  const deleteVehicle = async (id) => {
+    setLoading(true);
+    try {
+      const response = await makeAPICall(
+        `${config.API_BASE_DOMAIN}${config.API_BASE_URL}${config.API_VEHICLE_URL}/delete/${id}`,
+        "POST"
+      );
+      if (response.status === 200) {
+        return response;
+      } else {
+        setToast({
+          key: "deleteVehicleAPIError",
+          show: true,
+          message: response.response.data.message,
+        });
+        return response;
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    fetchVehicles,
+    createVehicle,
+    updateVehicle,
+    fetchVehicleById,
+    deleteVehicle,
+  };
 };

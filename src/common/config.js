@@ -16,6 +16,17 @@ config.enumStaticUrls = {
   vehicleList: "vehicles",
 };
 
+config.enumVehicleType = [
+  { name: "2 Wheeler", id: 1 },
+  { name: "4 Wheeler", id: 2 },
+];
+
+config.enumBldgNames = [
+  { name: "Satyam", id: 1 },
+  { name: "Shivam", id: 2 },
+  { name: "Sundaram", id: 3 },
+];
+
 config.toastDuration = 5000;
 config.expirationTime = 3600 * 1000;
 export default config;
