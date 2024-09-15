@@ -72,20 +72,36 @@ export const downloadBlob = async (fetchUrl, filename) => {
     const blob = await response.blob();
     const blobUrl = URL.createObjectURL(blob);
 
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = blobUrl;
     link.download = filename;
     document.body.appendChild(link);
     link.click();
-    
+
     URL.revokeObjectURL(blobUrl);
     document.body.removeChild(link);
   } catch (error) {
-    console.error('Error downloading file:', error);
+    console.error("Error downloading file:", error);
   }
 };
 
 // Convert Blob to File
 export const blobToFile = (blob, filename) => {
   return new File([blob], filename, { type: blob.type });
+};
+
+export const validateEmail = (email) => {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
+};
+
+export const validatePassword = (password) => {
+  const requirements = [
+    /[A-Z]/, // At least one uppercase letter
+    /[a-z]/, // At least one lowercase letter
+    /\d/, // At least one digit
+    /[!@#$%^&*()_+=[\]{};':"\\|,.<>/?]/, // At least one special character
+  ];
+
+  return requirements.every((rule) => rule.test(password));
 };

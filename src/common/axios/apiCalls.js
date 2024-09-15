@@ -21,10 +21,8 @@ export const makeAPICall = async (
     };
     if (data) config.data = data;
     const response = await axios(config);
-    return response.data;
+    return response;
   } catch (error) {
-    throw new Error(
-      error.response ? error.response.data.message : error.message
-    );
+    return error;
   }
 };

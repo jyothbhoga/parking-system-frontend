@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -6,25 +6,62 @@ import {
   DialogActions,
   TextField,
   Button,
+  Alert,
 } from "@mui/material";
 import config from "../../common/config";
 import { makeAPICall } from "../../common/axios/apiCalls";
-import { setCookie } from "../../common/helper";
+import {
+  setCookie,
+  validateEmail,
+  validatePassword,
+} from "../../common/helper";
+import { useSetAtom } from "jotai";
+import { toastStateAtom } from "../../jotai/commonAtom";
 
 const LoginModal = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [isValidated, setValidation] = useState(false);
+  const [isErr, setErr] = useState();
+  const setToast = useSetAtom(toastStateAtom);
+
+  useEffect(() => {
+    const validated =
+      validateEmail(formData.email) && validatePassword(formData.password);
+    setValidation(validated);
+  }, [formData]);
 
   const handleLogin = async () => {
     const url = `${config.API_BASE_DOMAIN}${config.API_BASE_URL}${config.API_ADMIN_URL}/login`;
     const data = await makeAPICall(
       url,
       "POST",
-      { email: email, password: password },
+      { email: formData.email, password: formData.password },
       false
     );
-    setCookie("token", `Bearer ${data.token}`);
-    window.location.reload();
+    if (data.status === 200) {
+      setCookie("token", `Bearer ${data.data.token}`, {
+        expires: new Date(Date.now() + config.expirationTime),
+      });
+      window.location.reload();
+    } else {
+      if (data.status === 401) {
+        setErr(data.response.data.message);
+      } else {
+        setToast({
+          key: "loginAPIError",
+          show: true,
+          message: data.response.data.message,
+        });
+      }
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   return (
@@ -46,8 +83,10 @@ const LoginModal = () => {
             type="email"
             fullWidth
             variant="outlined"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
           />
           <TextField
             margin="dense"
@@ -55,13 +94,35 @@ const LoginModal = () => {
             label="Password"
             type="password"
             fullWidth
+            name="password"
             variant="outlined"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={handleChange}
+            required
           />
         </DialogContent>
+        {isErr && (
+          <Alert
+            severity="error"
+            color="warning"
+            sx={{
+              textAlign: "center",
+              width: "80%",
+              margin: "0 auto",
+              background: "none",
+            }}
+          >
+            {isErr}
+          </Alert>
+        )}
         <DialogActions>
-          <Button onClick={handleLogin} color="primary">
+          <Button
+            onClick={handleLogin}
+            variant="contained"
+            color="primary"
+            sx={{ color: "#fff" }}
+            disabled={!isValidated}
+          >
             Login
           </Button>
         </DialogActions>

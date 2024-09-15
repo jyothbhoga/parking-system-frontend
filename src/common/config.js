@@ -16,4 +16,6 @@ config.enumStaticUrls = {
   vehicleList: "vehicles",
 };
 
+config.toastDuration = 5000;
+config.expirationTime = 3600 * 1000;
 export default config;
