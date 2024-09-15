@@ -4,6 +4,7 @@ import darkTheme from "./theme";
 import Toast from "./common/components/Toast";
 
 function App() {
+  console.log(process.env);
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />

@@ -1,6 +1,6 @@
 const config = {};
 config.BASE_DOMAIN = "/";
-config.API_BASE_DOMAIN = "http://localhost:9000";
+config.API_BASE_DOMAIN = process.env.REACT_APP_API_URL;
 config.API_BASE_URL = "/api";
 config.API_VEHICLE_URL = "/vehicles";
 config.API_ADMIN_URL = "/admin";
