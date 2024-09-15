@@ -98,7 +98,7 @@ const QRCodeGenerator = memo(({ vehicleData, setFormData }) => {
             }}
           >
             <img
-              src={imageURL}
+              src={imageURL || vehicleData.stickerImgURL}
               alt="Generated QR Code"
               style={{
                 maxWidth: "100%",

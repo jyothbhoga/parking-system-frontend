@@ -6,7 +6,7 @@ import { useAtom } from "jotai";
 import { toastStateAtom } from "../../jotai/commonAtom";
 import config from "../config";
 
-const Toast = memo(({ message }) => {
+const Toast = memo(() => {
   const [toast, setToast] = useAtom(toastStateAtom);
 
   const handleClose = () => {
@@ -18,10 +18,10 @@ const Toast = memo(({ message }) => {
   return (
     <Box sx={{ width: 500 }}>
       <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={toast.message}
         onClose={handleClose}
-        message={message}
+        message={toast.message}
         key={toast.key}
         autoHideDuration={config.toastDuration}
       />

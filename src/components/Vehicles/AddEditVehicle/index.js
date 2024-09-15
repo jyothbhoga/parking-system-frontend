@@ -145,15 +145,6 @@ const AddVehicleForm = () => {
         required
       />
 
-      {/* Vehicle Image */}
-      {isEdit ? (
-        <img
-          width={"100%"}
-          src={formData.stickerImgURL}
-          alt={formData.ownerName}
-        />
-      ) : null}
-
       {/* Vehicle Type Dropdown */}
       <FormControl fullWidth required>
         <InputLabel>Vehicle Type</InputLabel>
