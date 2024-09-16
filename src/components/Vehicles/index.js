@@ -128,54 +128,58 @@ const PaginatedTable = () => {
           </ListItem>
 
           {/* Data Rows */}
-          {vehiclesAtom?.data?.map((record, ind) => (
-            <ListItem key={record._id}>
-              <Box sx={{ width: "20%", textAlign: "center" }}>{ind + 1}</Box>
-              <Box sx={{ width: "20%", textAlign: "center" }}>
-                {record.ownerName}
-              </Box>
-              <Box sx={{ width: "20%", textAlign: "center" }}>
-                {record.regNo}
-              </Box>
-              <Box sx={{ width: "20%", textAlign: "center" }}>
-                {record.type}
-              </Box>
-              <Box sx={{ width: "20%", textAlign: "center" }}>
-                <ViewIcon
-                  style={{ cursor: "pointer", fill: "#fff" }}
-                  onClick={() =>
-                    navigate(
-                      `/${config.enumStaticUrls.vehicleList}/${config.enumStaticUrls.view}/${record._id}`
-                    )
-                  }
-                />
-                <EditIcon
-                  style={{ cursor: "pointer", fill: "#fff" }}
-                  onClick={() =>
-                    navigate(
-                      `/${config.enumStaticUrls.vehicleList}/${config.enumStaticUrls.edit}/${record._id}`
-                    )
-                  }
-                />
-                <DeleteIcon
-                  onClick={() => handleOpen(record._id)}
-                  style={{ cursor: "pointer", fill: "#fff" }}
-                />
-                <FileDownloadIcon
-                  style={{ cursor: "pointer", fill: "#fff" }}
-                  onClick={() =>
-                    handleDownload(
-                      `${record.stickerImgURL}?v=${Date.now()}`,
-                      `${record.regNo
-                        .toString()
-                        .toLowerCase()
-                        .replace(/\s+/g, "_")}.png`
-                    )
-                  }
-                />
-              </Box>
-            </ListItem>
-          ))}
+          {vehiclesAtom?.data?.length ? (
+            vehiclesAtom?.data?.map((record, ind) => (
+              <ListItem key={record._id}>
+                <Box sx={{ width: "20%", textAlign: "center" }}>{ind + 1}</Box>
+                <Box sx={{ width: "20%", textAlign: "center" }}>
+                  {record.ownerName}
+                </Box>
+                <Box sx={{ width: "20%", textAlign: "center" }}>
+                  {record.regNo}
+                </Box>
+                <Box sx={{ width: "20%", textAlign: "center" }}>
+                  {record.type}
+                </Box>
+                <Box sx={{ width: "20%", textAlign: "center" }}>
+                  <ViewIcon
+                    style={{ cursor: "pointer", fill: "#fff" }}
+                    onClick={() =>
+                      navigate(
+                        `/${config.enumStaticUrls.vehicleList}/${config.enumStaticUrls.view}/${record._id}`
+                      )
+                    }
+                  />
+                  <EditIcon
+                    style={{ cursor: "pointer", fill: "#fff" }}
+                    onClick={() =>
+                      navigate(
+                        `/${config.enumStaticUrls.vehicleList}/${config.enumStaticUrls.edit}/${record._id}`
+                      )
+                    }
+                  />
+                  <DeleteIcon
+                    onClick={() => handleOpen(record._id)}
+                    style={{ cursor: "pointer", fill: "#fff" }}
+                  />
+                  <FileDownloadIcon
+                    style={{ cursor: "pointer", fill: "#fff" }}
+                    onClick={() =>
+                      handleDownload(
+                        `${record.stickerImgURL}?v=${Date.now()}`,
+                        `${record.regNo
+                          .toString()
+                          .toLowerCase()
+                          .replace(/\s+/g, "_")}.png`
+                      )
+                    }
+                  />
+                </Box>
+              </ListItem>
+            ))
+          ) : (
+            <Box sx={{display: 'flex', justifyContent: 'center', alignItems:'center', minHeight: '400px'}}>No Vehicles Added yet</Box>
+          )}
         </List>
         <Paper
           sx={{
