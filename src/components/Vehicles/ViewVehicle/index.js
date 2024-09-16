@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
 import { useAtom, useAtomValue } from "jotai";
 import {
@@ -7,13 +7,18 @@ import {
   vehicleDataAtom,
 } from "../../../jotai/vehiclesAtom";
 import { useAddEditVehicles } from "../../../customHooks/useAddEditVehicles";
+import Back from "../../../assets/images/back";
+import config from "../../../common/config";
+import { getFormattedDate } from "../../../common/helper";
 
 const ViewVehicle = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const vehicleId = location.pathname.split("/")[3];
   const vehicleData = useAtomValue(vehicleDataAtom);
   const { fetchVehicleById } = useAddEditVehicles();
   const [currVehicle, setCurrentVehicle] = useAtom(currVehicleDataAtom);
+  const [createdDate, setCreatedDate] = useState("");
   useEffect(() => {
     if (vehicleData?.data?.length) {
       let vehicle;
@@ -22,14 +27,39 @@ const ViewVehicle = () => {
     } else {
       fetchVehicleById(vehicleId);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    setCreatedDate(
+      getFormattedDate(currVehicle.createdAt, "DD:MM:YYYY HH:MM:SS")
+    );
+  }, [currVehicle]);
 
   return (
     <Box sx={{ maxWidth: 400, margin: "0 auto", padding: 2 }}>
-      <Typography variant="h5" component="h2" gutterBottom>
-        Vehicle Details
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "normal",
+          alignItems: "center",
+        }}
+      >
+        <Box>
+          <Back
+            onClick={() => navigate(`/${config.enumStaticUrls.vehicleList}}`)}
+            style={{ cursor: "pointer", fill: "#fff" }}
+          />
+        </Box>
+        <Typography
+          variant="h5"
+          component="h2"
+          gutterBottom
+          sx={{ margin: "0 auto 0.35em" }}
+        >
+          Vehicle Details
+        </Typography>
+      </Box>
       {currVehicle ? (
         <List>
           <ListItem>
@@ -58,6 +88,9 @@ const ViewVehicle = () => {
               primary="Building Name"
               secondary={currVehicle.bldgName}
             />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="Created On" secondary={createdDate} />
           </ListItem>
           {currVehicle.stickerImgURL && (
             <ListItem>

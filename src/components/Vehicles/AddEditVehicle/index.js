@@ -17,6 +17,7 @@ import { vehicleDataAtom } from "../../../jotai/vehiclesAtom";
 import GenerateSticker from "./GenerateSticker";
 import { isEqualObjects } from "../../../common/helper";
 import { toastStateAtom } from "../../../jotai/commonAtom";
+import Back from "../../../assets/images/back";
 
 const AddVehicleForm = () => {
   const location = useLocation();
@@ -130,8 +131,6 @@ const AddVehicleForm = () => {
         display: "flex",
         flexDirection: "column",
         gap: 2,
-        alignItems: "center",
-        justifyContent: "center",
         maxWidth: 400,
         margin: "0 auto",
         padding: 2,
@@ -139,9 +138,28 @@ const AddVehicleForm = () => {
         boxShadow: 2,
       }}
     >
-      <Typography variant="h5" component="h2" gutterBottom>
-        {isEdit ? "Update" : "Add"} Vehicle
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "normal",
+          alignItems: "center",
+        }}
+      >
+        <Box>
+          <Back
+            onClick={() => navigate(`/${config.enumStaticUrls.vehicleList}}`)}
+            style={{ cursor: "pointer", fill: "#fff" }}
+          />
+        </Box>
+        <Typography
+          variant="h5"
+          component="h2"
+          gutterBottom
+          sx={{ margin: "0 auto 0.35em" }}
+        >
+          {isEdit ? "Update" : "Add"} Vehicle
+        </Typography>
+      </Box>
 
       {/* Vehicle Name */}
       <TextField

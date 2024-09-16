@@ -118,3 +118,49 @@ export const isEqualObjects = (obj1, obj2) => {
     ([key, value]) => obj2.hasOwnProperty(key) && obj2[key] === value
   );
 };
+
+export const getFormattedDate = (timestamp, formatType) => {
+  const date = new Date(timestamp);
+
+  switch (formatType) {
+    case "DD:MM":
+      return date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+      });
+
+    case "DD:MM:YYYY HH:MM:SS":
+      return (
+        date.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        }) +
+        " " +
+        date.toLocaleTimeString("en-GB", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        })
+      );
+
+    case "YYYY-MM-DD":
+      return date.toISOString().split("T")[0];
+
+    case "MM/DD/YYYY":
+      return date.toLocaleDateString("en-US");
+
+    case "HH:MM AM/PM":
+      return date.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+
+    case "FULL_DATE_TIME":
+      return date.toLocaleString();
+
+    default:
+      return "Invalid format type";
+  }
+};
