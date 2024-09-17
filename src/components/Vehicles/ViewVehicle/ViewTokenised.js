@@ -1,10 +1,14 @@
 import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { decryptData } from "../../../common/helper";
+import { decryptData, deleteCookie, getCookie } from "../../../common/helper";
 
 const ViewTokenisedVehicle = () => {
   const location = useLocation();
+  const isLoggedIn = getCookie("token");
+  if (isLoggedIn) {
+    deleteCookie("token");
+  }
   const params = location.search
     .slice(1)
     .split("&")

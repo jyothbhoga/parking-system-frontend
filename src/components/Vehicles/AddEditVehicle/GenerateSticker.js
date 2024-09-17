@@ -28,7 +28,7 @@ const QRCodeGenerator = memo(
     const encryptedData = encryptData(JSON.stringify(vehicleDetails));
 
     const qrData = JSON.stringify(
-      `${config.BASE_DOMAIN}?token=${encryptedData}`
+      `${config.BASE_DOMAIN}/${config.enumStaticUrls.tokenView}?token=${encryptedData}`
     );
 
     // Function to generate the image and store it

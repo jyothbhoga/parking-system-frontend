@@ -33,6 +33,10 @@ const RoutesComponent = memo(() => {
                 path={`/${config.enumStaticUrls.vehicleList}/${config.enumStaticUrls.view}/:id/`}
                 element={<ViewVehicle />}
               />
+              <Route
+                path={`/${config.enumStaticUrls.tokenView}`}
+                element={<ViewTokenisedVehicle />}
+              />
               {/* Default to vehicle list if route doesn't match */}
               <Route
                 path="*"
