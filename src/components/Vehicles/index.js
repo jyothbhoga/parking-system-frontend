@@ -69,11 +69,11 @@ const PaginatedTable = () => {
   const closeDelConfPopup = () => setOpen(false);
   const handleConfirm = async () => {
     const response = await deleteVehicle(selectedVehicle._id);
-    if (response.status === 200) {
+    if (response.data.isSuccess === true) {
       setToast({
         key: "deleteVehicleSuccess",
         show: true,
-        message: response.data.message,
+        message: response.data.data.message,
       });
       fetchVehicles(page, config.pageLimit);
     }
@@ -322,7 +322,7 @@ const PaginatedTable = () => {
                         fill: "#fff",
                         marginRight: "10px",
                       }}
-                      onClick={() => openDelConfPopup(record._id)}
+                      onClick={() => openDelConfPopup(record)}
                     />
                     <FileDownloadIcon
                       style={{ cursor: "pointer", fill: "#fff" }}

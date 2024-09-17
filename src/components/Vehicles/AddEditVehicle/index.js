@@ -114,11 +114,11 @@ const AddVehicleForm = () => {
     const response = isEdit
       ? await updateVehicle(vehicleId, data)
       : await createVehicle(data);
-    if (response.status === (isEdit ? 200 : 201)) {
+    if (response.data.isSuccess === true) {
       setToast({
         key: isEdit ? "updateVehicleSuccess" : "createVehicleSuccess",
         show: true,
-        message: response.data.message,
+        message: response.data.data.message,
       });
       navigate(`/${config.enumStaticUrls.vehicleList}}`);
     }

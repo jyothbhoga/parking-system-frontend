@@ -22,17 +22,17 @@ export const useAddEditVehicles = () => {
       const response = await makeAPICall(
         `${config.API_BASE_DOMAIN}${config.API_BASE_URL}${config.API_VEHICLE_URL}?page=${page}&limit=${limit}`
       );
-      if (response.status === 200) {
+      if (response.data.isSuccess === true) {
         setVehicleData({
-          data: response.data.vehicles,
-          totalCount: response.data.totalCount,
-          totalPages: response.data.totalPages,
+          data: response.data.data.vehicles,
+          totalCount: response.data.data.totalCount,
+          totalPages: response.data.data.totalPages,
         });
       } else {
         setToast({
           key: "fetchVehiclesAPIError",
           show: true,
-          message: response.response.statusText,
+          message: response.data.error.errorDescription,
         });
       }
     } catch (error) {
@@ -48,16 +48,16 @@ export const useAddEditVehicles = () => {
       const response = await makeAPICall(
         `${config.API_BASE_DOMAIN}${config.API_BASE_URL}${config.API_VEHICLE_URL}/${id}`
       );
-      if (response.status === 200) {
+      if (response.data.isSuccess === true) {
         setCurrVehicleData(response.data);
       } else {
         setToast({
           key: "fetchVehicleByIdAPIError",
           show: true,
-          message: response.response.data.message,
+          message: response.response.data.data.message,
         });
       }
-      return response.data;
+      return response.data.data;
     } catch (error) {
       setError(error.message);
     } finally {
@@ -73,13 +73,13 @@ export const useAddEditVehicles = () => {
         "POST",
         newVehicleData
       );
-      if (response.status === 201) {
+      if (response.data.isSuccess === true) {
         return response;
       } else {
         setToast({
           key: "createVehicleAPIError",
           show: true,
-          message: response.response.data.message,
+          message: response.response.data.data.message,
         });
         return response;
       }
@@ -98,13 +98,13 @@ export const useAddEditVehicles = () => {
         "POST",
         updatedVehicleData
       );
-      if (response.status === 200) {
+      if (response.data.isSuccess === true) {
         return response;
       } else {
         setToast({
           key: "updateVehicleAPIError",
           show: true,
-          message: response.response.data.message,
+          message: response.response.data.data.message,
         });
         return response;
       }
@@ -122,7 +122,7 @@ export const useAddEditVehicles = () => {
         `${config.API_BASE_DOMAIN}${config.API_BASE_URL}${config.API_VEHICLE_URL}/delete/${id}`,
         "POST"
       );
-      if (response.status === 200) {
+      if (response.data.isSuccess === true) {
         return response;
       } else {
         setToast({

@@ -38,19 +38,19 @@ const LoginModal = () => {
       { email: formData.email, password: formData.password },
       false
     );
-    if (data.status === 200) {
-      setCookie("token", `Bearer ${data.data.token}`, {
+    if (data.data.isSuccess === true) {
+      setCookie("token", `Bearer ${data.data.data.token}`, {
         expires: new Date(Date.now() + config.expirationTime),
       });
       window.location.reload();
     } else {
-      if (data.status === 401) {
-        setErr(data.response.data.message);
+      if (data.data.error.error === 401) {
+        setErr(data.data.error.errorDescription);
       } else {
         setToast({
           key: "loginAPIError",
           show: true,
-          message: data.response.data.message,
+          message: data.data.error.errorDescription,
         });
       }
     }
