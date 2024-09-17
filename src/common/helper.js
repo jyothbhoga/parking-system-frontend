@@ -1,3 +1,6 @@
+import CryptoJS from "crypto-js";
+import config from "./config";
+
 export const setCookie = (name, value, options = {}) => {
   let cookieString = `${encodeURIComponent(name)}=${encodeURIComponent(
     value
@@ -163,4 +166,18 @@ export const getFormattedDate = (timestamp, formatType) => {
     default:
       return "Invalid format type";
   }
+};
+
+// Encrypt data function
+export const encryptData = (data) => {
+  return CryptoJS.AES.encrypt(
+    JSON.stringify(data),
+    config.ENCRYPTION_KEY
+  ).toString();
+};
+
+// Decrypt data function
+export const decryptData = (encryptedData) => {
+  const bytes = CryptoJS.AES.decrypt(encryptedData, config.ENCRYPTION_KEY);
+  return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 };

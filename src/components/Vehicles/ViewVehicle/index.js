@@ -19,6 +19,7 @@ const ViewVehicle = () => {
   const { fetchVehicleById } = useAddEditVehicles();
   const [currVehicle, setCurrentVehicle] = useAtom(currVehicleDataAtom);
   const [createdDate, setCreatedDate] = useState("");
+
   useEffect(() => {
     if (vehicleData?.data?.length) {
       let vehicle;

@@ -8,8 +8,9 @@ import {
   CircularProgress,
 } from "@mui/material";
 // import { toPng } from "html-to-image";
-import { blobToFile, dataURLToBlob } from "../../../common/helper";
+import { blobToFile, dataURLToBlob, encryptData } from "../../../common/helper";
 import html2canvas from "html2canvas";
+import config from "../../../common/config";
 
 const QRCodeGenerator = memo(
   ({ vehicleData, setFormData, isStickerDataValid, setStickerDataGen }) => {
@@ -24,7 +25,11 @@ const QRCodeGenerator = memo(
       bldgName: vehicleData.bldgName,
     };
 
-    const qrData = JSON.stringify(vehicleDetails);
+    const encryptedData = encryptData(JSON.stringify(vehicleDetails));
+
+    const qrData = JSON.stringify(
+      `${config.BASE_DOMAIN}?token=${encryptedData}`
+    );
 
     // Function to generate the image and store it
     const handleGenerateImage = () => {

@@ -1,6 +1,7 @@
 const config = {};
-config.BASE_DOMAIN = "/";
+config.BASE_DOMAIN = process.env.REACT_APP_DOMAIN;
 config.API_BASE_DOMAIN = process.env.REACT_APP_API_URL;
+config.ENCRYPTION_KEY = process.env.REACT_APP_ENCRYPT_KEY;
 config.API_BASE_URL = "/api";
 config.API_VEHICLE_URL = "/vehicles";
 config.API_ADMIN_URL = "/admin";
@@ -14,6 +15,7 @@ config.enumStaticUrls = {
   edit: "edit",
   add: "add",
   vehicleList: "vehicles",
+  tokenView: "token-view",
 };
 
 config.enumVehicleType = [

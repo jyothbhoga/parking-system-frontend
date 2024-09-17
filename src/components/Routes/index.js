@@ -6,6 +6,7 @@ import AddEditVehicle from "../Vehicles/AddEditVehicle";
 import VehiclesList from "../Vehicles";
 import ViewVehicle from "../Vehicles/ViewVehicle";
 import { getCookie } from "../../common/helper";
+import ViewTokenisedVehicle from "../Vehicles/ViewVehicle/ViewTokenised";
 
 const RoutesComponent = memo(() => {
   const loggedInToken = getCookie("token");
@@ -45,6 +46,10 @@ const RoutesComponent = memo(() => {
               <Route
                 path={`/${config.enumStaticUrls.login}`}
                 element={<Login />}
+              />
+              <Route
+                path={`/${config.enumStaticUrls.tokenView}`}
+                element={<ViewTokenisedVehicle />}
               />
               {/* Default to login if not logged in */}
               <Route
