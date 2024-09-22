@@ -5,7 +5,6 @@ import {
   ListItem,
   Typography,
   Paper,
-  Pagination,
   Box,
   Button,
   Backdrop,
@@ -58,9 +57,9 @@ const PaginatedTable = () => {
   const { fetchVehicles, deleteVehicle } = useAddEditVehicles();
 
   useEffect(() => {
-    fetchVehicles(page, config.pageLimit);
+    fetchVehicles(page, rowsPerPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [page, rowsPerPage]);
 
   const openDelConfPopup = (vehicle) => {
     handleCloseAnchor();
@@ -77,7 +76,7 @@ const PaginatedTable = () => {
         show: true,
         message: response.data.data.message,
       });
-      fetchVehicles(page, config.pageLimit);
+      fetchVehicles(page, rowsPerPage);
     }
     setOpen(false);
   };
