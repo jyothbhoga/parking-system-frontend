@@ -25,7 +25,7 @@ export const useAddEditVehicles = () => {
       if (response.data.isSuccess === true) {
         setVehicleData({
           data: response.data.data.vehicles,
-          totalCount: response.data.data.totalCount,
+          totalCount: response.data.data.totalVehicles,
           totalPages: response.data.data.totalPages,
         });
       } else {

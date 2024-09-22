@@ -14,6 +14,7 @@ import {
   useMediaQuery,
   IconButton,
   Popover,
+  TablePagination,
 } from "@mui/material";
 import config from "../../common/config";
 import ViewIcon from "../../assets/images/view";
@@ -39,6 +40,7 @@ const PaginatedTable = () => {
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [activePopoverId, setActivePopoverId] = useState(null);
@@ -82,6 +84,11 @@ const PaginatedTable = () => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   const onLogout = () => {
@@ -364,11 +371,19 @@ const PaginatedTable = () => {
             marginTop: "20px",
           }}
         >
-          <Pagination
+          {/* <Pagination
             count={vehiclesAtom.totalPages}
             page={page}
             onChange={handleChangePage}
             color="primary"
+          /> */}
+          <TablePagination
+            component="div"
+            count={vehiclesAtom.totalCount}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
       </Box>
