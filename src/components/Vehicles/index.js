@@ -30,7 +30,7 @@ import { toastStateAtom } from "../../jotai/commonAtom";
 import More from "../../assets/images/more";
 
 const PaginatedTable = () => {
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const vehiclesAtom = useAtomValue(vehicleDataAtom);
@@ -57,7 +57,7 @@ const PaginatedTable = () => {
   const { fetchVehicles, deleteVehicle } = useAddEditVehicles();
 
   useEffect(() => {
-    fetchVehicles(page, rowsPerPage);
+    fetchVehicles(page + 1, rowsPerPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, rowsPerPage]);
 
@@ -76,7 +76,7 @@ const PaginatedTable = () => {
         show: true,
         message: response.data.data.message,
       });
-      fetchVehicles(page, rowsPerPage);
+      fetchVehicles(page + 1, rowsPerPage);
     }
     setOpen(false);
   };
