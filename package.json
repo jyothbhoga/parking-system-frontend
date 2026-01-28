@@ -18,19 +18,17 @@
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.23.1",
-    "react-scripts": "5.0.1",
     "styled-components": "^6.1.11",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "env-cmd -f .env react-scripts start",
-    "start:dev": "env-cmd -f .env.dev react-scripts start",
-    "start:prod": "env-cmd -f .env.prod react-scripts start",
-    "build": "env-cmd -f .env react-scripts build",
-    "build:dev": "env-cmd -f .env.dev react-scripts build",
-    "build:prod": "env-cmd -f .env.prod react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "env-cmd -f .env vite",
+    "dev:dev": "env-cmd -f .env.dev vite",
+    "dev:prod": "env-cmd -f .env.prod vite",
+    "build": "env-cmd -f .env vite build",
+    "build:dev": "env-cmd -f .env.dev vite build",
+    "build:prod": "env-cmd -f .env.prod vite build",
+    "preview": "vite preview"
   },
   "eslintConfig": {
     "extends": [
@@ -51,6 +49,9 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-transform-private-property-in-object": "^7.24.5"
-  }
+    "@babel/plugin-transform-private-property-in-object": "^7.24.5",
+    "@vitejs/plugin-react": "^5.1.1",
+    "vite": "^7.2.6"
+  },
+  "packageManager": "yarn@4.12.0"
 }
