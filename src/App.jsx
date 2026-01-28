@@ -1,16 +1,16 @@
-import Routes from "./components/Routes";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import darkTheme from "./theme";
 import Toast from "./common/components/Toast";
+import Routes from "./components/Routes";
+import darkTheme from "./theme";
 
 function App() {
-  return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <Routes />
-      <Toast />
-    </ThemeProvider>
-  );
+	return (
+		<ThemeProvider theme={darkTheme}>
+			<CssBaseline />
+			<Routes />
+			<Toast />
+		</ThemeProvider>
+	);
 }
 
 export default App;
