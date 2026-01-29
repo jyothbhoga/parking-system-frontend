@@ -123,61 +123,61 @@ export const isEqualObjects = (obj1, obj2) => {
 };
 
 export const getFormattedDate = (timestamp, formatType) => {
-  const date = new Date(timestamp);
+	const date = new Date(timestamp);
 
-  switch (formatType) {
-    case "DD:MM":
-      return date.toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "2-digit",
-      });
+	switch (formatType) {
+		case "DD:MM":
+			return date.toLocaleDateString("en-GB", {
+				day: "2-digit",
+				month: "2-digit",
+			});
 
-    case "DD:MM:YYYY HH:MM:SS":
-      return (
-        date.toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        }) +
-        " " +
-        date.toLocaleTimeString("en-GB", {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        })
-      );
+		case "DD:MM:YYYY HH:MM:SS":
+			return (
+				date.toLocaleDateString("en-GB", {
+					day: "2-digit",
+					month: "2-digit",
+					year: "numeric",
+				}) +
+				" " +
+				date.toLocaleTimeString("en-GB", {
+					hour: "2-digit",
+					minute: "2-digit",
+					second: "2-digit",
+				})
+			);
 
-    case "YYYY-MM-DD":
-      return date.toISOString().split("T")[0];
+		case "YYYY-MM-DD":
+			return date.toISOString().split("T")[0];
 
-    case "MM/DD/YYYY":
-      return date.toLocaleDateString("en-US");
+		case "MM/DD/YYYY":
+			return date.toLocaleDateString("en-US");
 
-    case "HH:MM AM/PM":
-      return date.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      });
+		case "HH:MM AM/PM":
+			return date.toLocaleTimeString("en-US", {
+				hour: "2-digit",
+				minute: "2-digit",
+				hour12: true,
+			});
 
-    case "FULL_DATE_TIME":
-      return date.toLocaleString();
+		case "FULL_DATE_TIME":
+			return date.toLocaleString();
 
-    default:
-      return "Invalid format type";
-  }
+		default:
+			return "Invalid format type";
+	}
 };
 
 // Encrypt data function
 export const encryptData = (data) => {
-  return CryptoJS.AES.encrypt(
-    JSON.stringify(data),
-    config.ENCRYPTION_KEY
-  ).toString();
+	return CryptoJS.AES.encrypt(
+		JSON.stringify(data),
+		config.ENCRYPTION_KEY,
+	).toString();
 };
 
 // Decrypt data function
 export const decryptData = (encryptedData) => {
-  const bytes = CryptoJS.AES.decrypt(encryptedData, config.ENCRYPTION_KEY);
-  return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+	const bytes = CryptoJS.AES.decrypt(encryptedData, config.ENCRYPTION_KEY);
+	return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 };

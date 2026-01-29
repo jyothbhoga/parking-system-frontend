@@ -10,12 +10,12 @@ config.IMG_BASE = "/assets/images/";
 config.pageLimit = 10;
 
 config.enumStaticUrls = {
-  login: "login",
-  view: "view",
-  edit: "edit",
-  add: "add",
-  vehicleList: "vehicles",
-  tokenView: "token-view",
+	login: "login",
+	view: "view",
+	edit: "edit",
+	add: "add",
+	vehicleList: "vehicles",
+	tokenView: "token-view",
 };
 
 config.enumVehicleType = [
