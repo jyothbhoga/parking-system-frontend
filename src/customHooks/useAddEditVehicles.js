@@ -1,20 +1,20 @@
 import { useSetAtom } from "jotai";
 import { makeAPICall } from "../common/axios/apiCalls";
-import {
-  currVehicleDataAtom,
-  errorAtom,
-  loadingAtom,
-  vehicleDataAtom,
-} from "../jotai/vehiclesAtom";
 import config from "../common/config";
 import { toastStateAtom } from "../jotai/commonAtom";
+import {
+	currVehicleDataAtom,
+	errorAtom,
+	loadingAtom,
+	vehicleDataAtom,
+} from "../jotai/vehiclesAtom";
 
 export const useAddEditVehicles = () => {
-  const setVehicleData = useSetAtom(vehicleDataAtom);
-  const setCurrVehicleData = useSetAtom(currVehicleDataAtom);
-  const setLoading = useSetAtom(loadingAtom);
-  const setError = useSetAtom(errorAtom);
-  const setToast = useSetAtom(toastStateAtom);
+	const setVehicleData = useSetAtom(vehicleDataAtom);
+	const setCurrVehicleData = useSetAtom(currVehicleDataAtom);
+	const setLoading = useSetAtom(loadingAtom);
+	const setError = useSetAtom(errorAtom);
+	const setToast = useSetAtom(toastStateAtom);
 
   const fetchVehicles = async (page, limit) => {
     setLoading(true);
@@ -139,11 +139,11 @@ export const useAddEditVehicles = () => {
     }
   };
 
-  return {
-    fetchVehicles,
-    createVehicle,
-    updateVehicle,
-    fetchVehicleById,
-    deleteVehicle,
-  };
+	return {
+		fetchVehicles,
+		createVehicle,
+		updateVehicle,
+		fetchVehicleById,
+		deleteVehicle,
+	};
 };
