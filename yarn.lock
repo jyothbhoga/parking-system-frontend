@@ -1799,6 +1799,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"crypto-js@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "crypto-js@npm:4.2.0"
+  checksum: 10c0/8fbdf9d56f47aea0794ab87b0eb9833baf80b01a7c5c1b0edc7faf25f662fb69ab18dc2199e2afcac54670ff0cd9607a9045a3f7a80336cccd18d77a55b9fdf0
+  languageName: node
+  linkType: hard
+
 "css-color-keywords@npm:^1.0.0":
   version: 1.0.0
   resolution: "css-color-keywords@npm:1.0.0"
@@ -3857,6 +3864,7 @@ __metadata:
     "@testing-library/user-event": "npm:^13.5.0"
     "@vitejs/plugin-react": "npm:^5.1.1"
     axios: "npm:^1.7.7"
+    crypto-js: "npm:^4.2.0"
     env-cmd: "npm:^10.1.0"
     html2canvas: "npm:^1.4.1"
     jotai: "npm:^2.9.3"
