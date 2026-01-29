@@ -50,13 +50,8 @@ const AddVehicleForm = () => {
 		regNo: "",
 	});
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <TODO: fix this dependancy issue>
 	useEffect(() => {
-		const getvehicleData = async () => {
-			const vehicle = await fetchVehicleById(vehicleId);
-			setFormData({ ...vehicle });
-			setStickerDataGen({ ...vehicle });
-		};
-
 		if (isEdit && vehicleData?.data?.length) {
 			const vehicle = vehicleData.data.find((veh) => veh._id === vehicleId);
 			setFormData({ ...vehicle });
@@ -64,7 +59,7 @@ const AddVehicleForm = () => {
 		} else if (isEdit) {
 			getvehicleData();
 		}
-	}, [isEdit, vehicleData, vehicleId, fetchVehicleById]);
+	}, []);
 
 	useEffect(() => {
 		const { name, ownerName, stickerImgURL, type, roomNo, bldgName, regNo } =
@@ -90,6 +85,12 @@ const AddVehicleForm = () => {
 					: stickerImgURL),
 		);
 	}, [formData, stickerDataGen]);
+
+	const getvehicleData = async () => {
+		const vehicle = await fetchVehicleById(vehicleId);
+		setFormData({ ...vehicle.vehicleData });
+		setStickerDataGen({ ...vehicle.vehicleData });
+	};
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;

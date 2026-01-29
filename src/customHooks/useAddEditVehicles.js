@@ -49,7 +49,7 @@ export const useAddEditVehicles = () => {
 				`${config.API_BASE_DOMAIN}${config.API_BASE_URL}${config.API_VEHICLE_URL}/${id}`,
 			);
 			if (response.data.isSuccess === true) {
-				setCurrVehicleData(response.data);
+				setCurrVehicleData(response.data.data.vehicleData);
 			} else {
 				setToast({
 					key: "fetchVehicleByIdAPIError",

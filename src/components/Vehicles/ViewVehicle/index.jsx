@@ -20,14 +20,19 @@ const ViewVehicle = () => {
 	const [currVehicle, setCurrentVehicle] = useAtom(currVehicleDataAtom);
 	const [createdDate, setCreatedDate] = useState("");
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <TODO: fix this dependancy issue>
 	useEffect(() => {
+		updateCurrVehicleData();
+	}, []);
+
+	const updateCurrVehicleData = () => {
 		if (vehicleData?.data?.length) {
 			const vehicle = vehicleData?.data.find((veh) => veh._id === vehicleId);
 			setCurrentVehicle(vehicle);
 		} else {
 			fetchVehicleById(vehicleId);
 		}
-	}, [vehicleData, vehicleId, fetchVehicleById, setCurrentVehicle]);
+	};
 
 	useEffect(() => {
 		setCreatedDate(

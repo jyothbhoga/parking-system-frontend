@@ -56,9 +56,10 @@ const PaginatedTable = () => {
 
 	const { fetchVehicles, deleteVehicle } = useAddEditVehicles();
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <fetchVehicles not needed>
 	useEffect(() => {
 		fetchVehicles(page + 1, rowsPerPage);
-	}, [page, rowsPerPage, fetchVehicles]);
+	}, [page, rowsPerPage]);
 
 	const openDelConfPopup = (vehicle) => {
 		handleCloseAnchor();

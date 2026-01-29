@@ -29,6 +29,33 @@ const QRCodeGenerator = memo(
 
 		const qrData = `${config.BASE_DOMAIN}/${config.enumStaticUrls.tokenView}?token=${encryptedData}`;
 
+		const renderSticker = () => {
+			return generatingImg ? (
+				<CircularProgress />
+			) : (
+				vehicleData.stickerImgURL && (
+					<Box sx={{ mt: 4 }}>
+						<Typography variant="h6">Vehicle Information Sticker</Typography>
+						<Paper
+							elevation={3}
+							sx={{
+								margin: "0 auto",
+								p: 2, // shorthand for padding
+								display: "flex",
+								justifyContent: "center",
+							}}
+						>
+							<img
+								src={imageURL || vehicleData.stickerImgURL}
+								alt="Generated QR Code"
+								style={{ maxWidth: "100%" }}
+							/>
+						</Paper>
+					</Box>
+				)
+			);
+		};
+
 		// Function to generate the image and store it
 		const handleGenerateImage = () => {
 			setGeneratingImg(true);
@@ -85,7 +112,6 @@ const QRCodeGenerator = memo(
 						borderRadius: "50%",
 					}}
 				>
-					{/* QR Code Overlay */}
 					<QRCodeCanvas
 						value={qrData}
 						size={200}
@@ -99,30 +125,7 @@ const QRCodeGenerator = memo(
 					/>
 				</Paper>
 				{/* Display the generated image below */}
-				{generatingImg ? (
-					<CircularProgress />
-				) : (
-					vehicleData.stickerImgURL && (
-						<Box sx={{ mt: 4 }}>
-							<Typography variant="h6">Generated Image:</Typography>
-							<Paper
-								elevation={3}
-								sx={{
-									margin: "0 auto",
-									p: 2, // shorthand for padding
-									display: "flex",
-									justifyContent: "center",
-								}}
-							>
-								<img
-									src={imageURL || vehicleData.stickerImgURL}
-									alt="Generated QR Code"
-									style={{ maxWidth: "100%" }}
-								/>
-							</Paper>
-						</Box>
-					)
-				)}
+				{renderSticker()}
 			</Box>
 		);
 	},
