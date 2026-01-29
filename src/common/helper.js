@@ -20,11 +20,9 @@ export const setCookie = (name, value, options = {}) => {
 		cookieString += `; SameSite=${options.sameSite}`;
 	}
 
-	// biome-ignore lint/suspicious/noDocumentCookie: <TODO: temporary code>
-	document.cookie = cookieString;
+	updateCookie(cookieString);
 };
 
-// Get a cookie by name
 export const getCookie = (name) => {
 	const decodedCookie = decodeURIComponent(document.cookie);
 	const cookieArray = decodedCookie.split("; ");
@@ -35,13 +33,18 @@ export const getCookie = (name) => {
 			return cookieValue;
 		}
 	}
-	return null; // if cookie not found
+	return null;
 };
 
 export const deleteCookie = (cookieName) => {
-	// biome-ignore lint/suspicious/noDocumentCookie: <TODO: temporary code>
-	document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+	updateCookie(
+		`${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`,
+	);
 	window.location.reload();
+};
+
+const updateCookie = (value) => {
+	document.cookie = value;
 };
 
 export const dataURLToBlob = (dataURL) => {
