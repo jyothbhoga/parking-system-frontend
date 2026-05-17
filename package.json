@@ -23,7 +23,7 @@
 		"web-vitals": "^2.1.4"
 	},
 	"scripts": {
-		"start": "env-cmd -f .env vite",
+		"start": "env-cmd -f .env vite --host",
 		"start:dev": "env-cmd -f .env.dev vite",
 		"start:prod": "env-cmd -f .env.prod vite",
 		"build": "env-cmd -f .env vite build",

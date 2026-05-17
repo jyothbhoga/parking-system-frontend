@@ -24,9 +24,9 @@ config.enumVehicleType = [
 ];
 
 config.enumBldgNames = [
-	{ name: "Satyam", id: 1 },
-	{ name: "Shivam", id: 2 },
-	{ name: "Sundaram", id: 3 },
+	{ name: "A wing", id: 1 },
+	{ name: "B wing", id: 2 },
+	{ name: "C wing", id: 3 },
 ];
 
 config.toastDuration = 5000;
