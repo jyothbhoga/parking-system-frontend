@@ -81,7 +81,7 @@ const AddVehicleForm = () => {
       roomNo.length > 2 &&
       regNo.length > 3 &&
       bldgName.length > 3 &&
-      contact.length > 3;
+      String(contact).length === 10;
 
     const stickerValidation =
       commonValidation &&
@@ -129,7 +129,7 @@ const AddVehicleForm = () => {
     data.append("type", type);
     data.append("regNo", regNo);
     data.append("bldgName", bldgName);
-    data.append("contact", contact);
+    data.append("contact", Number(contact));
     data.append("roomNo", roomNo);
     const response = isEdit
       ? await updateVehicle(vehicleId, data)
@@ -198,9 +198,11 @@ const AddVehicleForm = () => {
         name="contact"
         variant="outlined"
         fullWidth
+				type="tel"
         value={formData.contact}
         onChange={handleChange}
         required
+				inputProps={{ maxLength: 10 }}
       />
 
       {/* Registration Number of vehicle */}
